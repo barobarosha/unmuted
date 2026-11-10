@@ -1,0 +1,75 @@
+:root {
+  /* 面 */
+  --paper: #fcfaf5;
+  --ink: #23255c;
+
+  /* 墨的层级：只有 alpha，不再调第二个灰 */
+  --ink-body: rgba(35, 37, 92, .84);
+  --ink-sub: rgba(35, 37, 92, .58);
+  --ink-weak: rgba(35, 37, 92, .34);
+  --ink-hair: rgba(176, 138, 62, .38);
+  --ink-faint: rgba(35, 37, 92, .05);
+
+  /* 反白区块上的墨 */
+  --paper-body: rgba(252, 250, 245, .84);
+  --paper-sub: rgba(252, 250, 245, .58);
+  --paper-hair: rgba(201, 155, 63, .4);
+
+  /* 唯一的强调色 */
+  --accent: #e8490f;
+
+  /* золото: номера позиций и тонкие линии */
+  --gold: #b08a3e;
+  --gold-soft: #c99b3f;
+
+  /* 字：一对到底——Inter Tight 只给大标题，Inter 通吃其余 */
+  --sans: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --display: "Inter Tight", Inter, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --fs-name: clamp(46px, 9.6vw, 152px);
+  --fs-h2: clamp(28px, 3.8vw, 48px);
+  --fs-h3: clamp(19px, 2vw, 26px);
+  --fs-lead: clamp(17px, 1.5vw, 21px);
+  --fs-body: 16px;
+  --fs-table: 14px;
+  --fs-cap: 13px;
+  --fs-label: 11px;
+
+  /* 字距：大字收紧、小字放开，只有这四档 */
+  --ls-name: -.045em;
+  --ls-h2: -.03em;
+  --ls-h3: -.015em;
+  --ls-label: .14em;
+
+  /* 布局常量：桌面 / 移动成对 */
+  --container-pad: 40px;
+  --section-pad: 128px;
+  --header-h: 64px;
+  --header-h-compact: 52px;
+  --maxw: 1280px;
+  --read: 680px;
+  --gutter: 24px;
+  --col: calc((min(100vw, var(--maxw)) - 2 * var(--container-pad) - 11 * var(--gutter)) / 12);
+
+  /* 全站直角：没有任何圆角，层级交给发丝线与留白 */
+  --radius: 0;
+
+  /* 过渡只有两档 */
+  --fast: .3s ease-in-out;
+  --slow: 1s cubic-bezier(.76, 0, .24, 1);
+
+  /* JS 从这里读时长，唯一事实来源 */
+  --file-open: .42s;
+  --file-close: .28s;
+  --flip: .32s;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --container-pad: 20px;
+    --section-pad: 72px;
+    --header-h: 56px;
+    --header-h-compact: 48px;
+  }
+}

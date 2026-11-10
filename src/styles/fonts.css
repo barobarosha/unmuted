@@ -1,0 +1,53 @@
+/* Локальные шрифты проекта (файлы в репозитории, без внешних CDN).
+   Пара как в шаблоне: Inter Tight — крупные заголовки, Inter — всё остальное.
+   Каждый начертание в двух файлах: latin + cyrillic (unicode-range). */
+
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/intertight-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/intertight-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/fonts/intertight-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/fonts/intertight-500-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/fonts/intertight-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/fonts/intertight-600-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('../assets/fonts/intertight-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter Tight'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('../assets/fonts/intertight-700-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/inter-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('../assets/fonts/inter-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/fonts/inter-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('../assets/fonts/inter-500-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/fonts/inter-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('../assets/fonts/inter-600-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('../assets/fonts/inter-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('../assets/fonts/inter-700-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF, U+0500-052F; }
