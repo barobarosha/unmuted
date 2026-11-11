@@ -2148,3 +2148,56 @@ main {
   .coverbackdrop img { padding-right: 0; }
   .dragonballoon { right: 16px; top: auto; bottom: 130px; max-width: 220px; font-size: 13px; }
 }
+
+/* ===== UNMUTED brand pass 2: hero polish ===== */
+.covereyebrow {
+  margin: 0 0 16px;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+}
+.covercta { margin: 30px 0 0; }
+.covercta a {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff8f2;
+  padding: 15px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  letter-spacing: .02em;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(232, 73, 15, .35);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.covercta a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(232, 73, 15, .5);
+}
+.coverbackdrop img {
+  position: absolute;
+  left: auto;
+  right: clamp(0px, 2vw, 40px);
+  bottom: 0;
+  width: auto;
+  height: 86%;
+  max-width: 46vw;
+  padding-right: 0;
+  object-fit: contain;
+  object-position: right bottom;
+  filter: none;
+}
+.dragonballoon {
+  right: clamp(240px, 34vw, 540px);
+  top: clamp(64px, 11vh, 140px);
+  animation: balloonfloat 5s ease-in-out infinite;
+}
+@keyframes balloonfloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+@media (max-width: 860px) {
+  .coverbackdrop img { max-width: 62vw; height: 62%; }
+  .dragonballoon { right: 12px; top: auto; bottom: 40%; }
+}
+
