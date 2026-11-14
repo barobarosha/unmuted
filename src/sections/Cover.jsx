@@ -1,76 +1,129 @@
-import { useEffect, useRef, useState } from 'react'
-import { useI18n } from '../i18n.jsx'
-import { studio } from '../data/studio.js'
+import { useEffect, useRef } from 'react'
+import { prefersReducedMotion } from '../hooks/useReveal.js'
+import { useLang } from '../i18n/LangContext.jsx'
 
-export function Cover() {
-  const { t } = useI18n()
-  const name = t(studio.name)
-  const coverRef = useRef(null)
-  const backdropRef = useRef(null)
-  const [shown, setShown] = useState(false)
+/** 名称按语言切分：中文逐字，英文逐词，避免英文被拆成孤立字母 */
+const splitName = (name, lang) =>
+  lang === 'zh' ? Array.from(name) : name.split(/(\s+)/).filter((part) => part.trim().length)
+
+/** 首屏：文字先于图片占据视野，图作为背景在文字之后缓慢揭开 */
+export default function Cover({ studio, stats, sentinelRef }) {
+  const rootRef = useRef(null)
+  const { lang, t } = useLang()
 
   useEffect(() => {
-    const id = window.setTimeout(() => setShown(true), 120)
-    return () => window.clearTimeout(id)
+    const node = rootRef.current
+    if (!node) return
+    if (prefersReducedMotion()) {
+      node.classList.add('shown')
+      return
+    }
+    const id = requestAnimationFrame(() => node.classList.add('shown'))
+    return () => cancelAnimationFrame(id)
   }, [])
 
+  // 正文覆盖上来的过程中，首屏按被盖住的比例退后，而不是被整块拉走
   useEffect(() => {
-    const root = coverRef.current
-    const backdrop = backdropRef.current
-    if (!root || !backdrop) return undefined
+    const node = rootRef.current
+    if (!node) return
+    const holder = node.querySelector('.coverholder')
+
+    const stackQuery = window.matchMedia('(max-width: 860px)')
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     let raf = 0
-    const update = () => {
-      const rect = root.getBoundingClientRect()
-      const total = Math.max(rect.height, 1)
-      const progress = Math.min(Math.max(-rect.top / total, 0), 1)
-      backdrop.style.transform = `translate3d(0, ${progress * 44}px, 0) scale(${1 + progress * 0.06})`
+    let idle = false
+
+    const measure = () => {
+      raf = 0
+      const room = node.offsetHeight || 1
+      const covered = Math.min(Math.max(window.scrollY / room, 0), 1)
+      node.style.setProperty('--covered', covered.toFixed(4))
+      // 首屏被正文完全盖过去之后就不可见，避免在页脚等后续区域露出
+      if (holder) holder.style.visibility = covered >= 1 ? 'hidden' : ''
     }
-    const onScroll = () => {
-      window.cancelAnimationFrame(raf)
-      raf = window.requestAnimationFrame(update)
+
+    const schedule = () => {
+      if (idle || raf) return
+      raf = requestAnimationFrame(measure)
     }
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+
+    const sync = () => {
+      cancelAnimationFrame(raf)
+      raf = 0
+      idle = stackQuery.matches || motionQuery.matches
+      if (idle) {
+        node.style.removeProperty('--covered')
+        if (holder) holder.style.visibility = ''
+      }
+      else measure()
+    }
+
+    sync()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', sync)
+    stackQuery.addEventListener('change', sync)
+    motionQuery.addEventListener('change', sync)
+
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      window.cancelAnimationFrame(raf)
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', sync)
+      stackQuery.removeEventListener('change', sync)
+      motionQuery.removeEventListener('change', sync)
     }
   }, [])
+
+  const name = t(studio.name)
+  const glyphs = splitName(name, lang)
 
   return (
-    <section className={`cover${shown ? ' shown' : ''}`} id="cover" ref={coverRef}>
+    <section className="cover" id="top" ref={rootRef}>
       <div className="coverholder">
-        <div className="coverbackdrop" aria-hidden="true">
-          <img
-            ref={backdropRef}
-            src="assets/images/dragon-hero-dark.png"
-            alt=""
-            width="784"
-            height="769"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-        <div className="shell coverinner">
-          <p className="covereyebrow">{t('Разговорный клуб английского', 'English speaking club')}</p>
-          <h1 className="namemark" aria-label={name}>
-            {name.split('').map((glyph, index) => (
-              <span className="glyph" aria-hidden="true" key={`${glyph}-${index}`}>
+      <div className="coverbackdrop" aria-hidden="true">
+        <img
+          src="assets/images/dragon-hero-dark.png"
+          alt=""
+          width="784"
+          height="769"
+          {...{ fetchpriority: 'high' }}
+          decoding="async"
+        />
+        <span className="coverveil" />
+      </div>
+
+      <div className="shell coverinner">
+        <p className="covereyebrow">{t('Разговорный клуб английского', 'English speaking club')}</p>
+        <h1 className="namemark" aria-label={name}>
+          {glyphs.map((glyph, index) => (
+            <span className="glyphbox" key={`${glyph}-${index}`} aria-hidden="true">
+              <span className="glyph" style={{ '--glyph-index': Math.min(index, 12) }}>
                 {glyph}
               </span>
-            ))}
-          </h1>
-          <div className="coverbrief">
-            <p className="coverlead">{t(studio.positioning)}</p>
-            <p className="coverabout">{t(studio.about)}</p>
-            <p className="covercta"><a href="#contact">{t('Записаться на пробное занятие', 'Book a trial lesson')} →</a></p>
-          </div>
+            </span>
+          ))}
+        </h1>
+
+        <div className="coverbrief">
+          <p className="coverlead">{t(studio.positioning)}</p>
+          <p className="coverabout">{t(studio.about)}</p>
+          <p className="covercta"><a href="#contact">{t('Записаться на пробное занятие', 'Book a trial lesson')} →</a></p>
         </div>
-        <p className="dragonballoon">{t('«О, гость! Я DragDealer — твой учитель и проводник на всё обучение»', '"Oh, a guest! I\'m DragDealer — your teacher and guide for the whole journey"')}</p>
+
+        <dl className="covertally">
+          {stats.map((item, index) => (
+            <div className="tallyitem" key={item.key} style={{ '--tally-index': index }}>
+              <dt className="overline">{item.label}</dt>
+              <dd className="tallynum numeral">{item.value}</dd>
+              <dd className="tallynote">{item.note}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
-      <div className="coversentinel" ref={sentinelRef} aria-hidden="true" />
+
+      <p className="dragonballoon">{t('«О, гость! Я DragDealer — твой учитель и проводник на всё обучение»', '"Oh, a guest! I\'m DragDealer — your teacher and guide for the whole journey"')}</p>
+      </div>
+
+      <div ref={sentinelRef} aria-hidden="true" />
     </section>
   )
 }
