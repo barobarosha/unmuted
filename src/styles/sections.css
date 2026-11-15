@@ -2219,3 +2219,29 @@ main {
 /* чуть уплотняем вертикаль, чтобы всё помещалось в экран */
 .coverinner { gap: clamp(20px, 2.8vw, 40px) !important; }
 .covereyebrow { margin-bottom: 10px; }
+/* ===== UNMUTED brand pass 4: живой дракон ===== */
+.coverbackdrop img {
+  height: 62%;
+  max-width: 34vw;
+  cursor: pointer;
+  transform: rotate(var(--tilt, 0deg));
+  transform-origin: 50% 88%;
+  transition: opacity 1.2s cubic-bezier(.16, 1, .3, 1) .5s, transform .3s ease-out;
+  animation: dragonbob 5s ease-in-out infinite;
+}
+.cover.shown .coverbackdrop img {
+  transform: rotate(var(--tilt, 0deg));
+}
+@keyframes dragonbob {
+  0%, 100% { margin-bottom: 0; }
+  50% { margin-bottom: 18px; }
+}
+.dragonballoon { cursor: pointer; user-select: none; }
+.dragonballoon .replica { display: inline-block; animation: replicapop .35s ease; }
+@keyframes replicapop {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 860px) {
+  .coverbackdrop img { height: 46%; max-width: 48vw; }
+}

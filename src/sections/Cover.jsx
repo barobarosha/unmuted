@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '../hooks/useReveal.js'
 import { useLang } from '../i18n/LangContext.jsx'
 
@@ -6,10 +6,19 @@ import { useLang } from '../i18n/LangContext.jsx'
 const splitName = (name, lang) =>
   lang === 'zh' ? Array.from(name) : name.split(/(\s+)/).filter((part) => part.trim().length)
 
+const REPLICAS = [
+  ['«О, гость! Я DragDealer — твой учитель и проводник на всё обучение»', '"Oh, a guest! I\'m DragDealer — your teacher and guide for the whole journey"'],
+  ['Keep scrolling — впереди потоки и тарифы', 'Keep scrolling — flows and plans ahead'],
+  ['Smart move, что зашёл сюда', 'Smart move landing here'],
+  ['Your seat is waiting. Записывайся на пробное', 'Your seat is waiting. Book a trial lesson'],
+  ['Говорить не больно. Проверено — я сам дракон', 'Speaking doesn\'t hurt. Trust me, I\'m a dragon'],
+]
+
 /** 首屏：文字先于图片占据视野，图作为背景在文字之后缓慢揭开 */
 export default function Cover({ studio, stats, sentinelRef }) {
   const rootRef = useRef(null)
   const { lang, t } = useLang()
+  const [replica, setReplica] = useState(0)
 
   useEffect(() => {
     const node = rootRef.current
@@ -73,6 +82,19 @@ export default function Cover({ studio, stats, sentinelRef }) {
     }
   }, [])
 
+  // Дракон следит за курсором: плавный наклон по горизонтали
+  useEffect(() => {
+    const node = rootRef.current
+    if (!node) return
+    const onMove = (event) => {
+      const tilt = ((event.clientX / window.innerWidth) - 0.5) * 10
+      node.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`)
+    }
+    window.addEventListener('mousemove', onMove, { passive: true })
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [])
+
+  const nextReplica = () => setReplica((index) => (index + 1) % REPLICAS.length)
   const name = t(studio.name)
   const glyphs = splitName(name, lang)
 
@@ -87,6 +109,7 @@ export default function Cover({ studio, stats, sentinelRef }) {
           height="769"
           {...{ fetchpriority: 'high' }}
           decoding="async"
+          onClick={nextReplica}
         />
         <span className="coverveil" />
       </div>
@@ -120,7 +143,9 @@ export default function Cover({ studio, stats, sentinelRef }) {
         </dl>
       </div>
 
-      <p className="dragonballoon">{t('«О, гость! Я DragDealer — твой учитель и проводник на всё обучение»', '"Oh, a guest! I\'m DragDealer — your teacher and guide for the whole journey"')}</p>
+      <p className="dragonballoon" onClick={nextReplica}>
+        <span className="replica" key={replica}>{t(REPLICAS[replica][0], REPLICAS[replica][1])}</span>
+      </p>
       </div>
 
       <div ref={sentinelRef} aria-hidden="true" />
