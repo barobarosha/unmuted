@@ -2245,3 +2245,19 @@ main {
 @media (max-width: 860px) {
   .coverbackdrop img { height: 46%; max-width: 48vw; }
 }
+/* ===== UNMUTED brand pass 5: размер дракона и скролл-воздух ===== */
+
+/* дракон ещё меньше */
+.coverbackdrop img {
+  height: 55%;
+  max-width: 30vw;
+}
+
+/* hero чуть выше экрана: ~50px скролла до появления следующего блока */
+.cover {
+  min-height: 106svh;
+}
+
+@media (max-width: 860px) {
+  .coverbackdrop img { height: 40%; max-width: 46vw; }
+}
